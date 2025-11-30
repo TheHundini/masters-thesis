@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: pqc-benchmark
+
+server:
+  port: 8080
+
+logging:
+  level:
+    no.softmuffin: DEBUG
+    org.testcontainers: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+crypto:
+  default-algorithm: ML-DSA
