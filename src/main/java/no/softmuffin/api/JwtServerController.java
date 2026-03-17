@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import no.softmuffin.api.dto.BenchmarkResultDto;
 import no.softmuffin.api.dto.SignRequestDto;
 import no.softmuffin.api.dto.SignResponseDto;
+import no.softmuffin.api.dto.VerifyRequestDto;
+import no.softmuffin.api.dto.VerifyResponseDto;
 import no.softmuffin.service.SignatureBenchmarkService;
 import no.softmuffin.service.SignatureService;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,12 @@ public class JwtServerController {
         String token = signatureService.generateSignedJwt(request.algorithm(), request.payload());
 
         return ResponseEntity.ok(new SignResponseDto(request.algorithm(), token));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<VerifyResponseDto> verify(@Valid @RequestBody VerifyRequestDto request) {
+        final boolean valid = signatureService.verifySignedJwt(request.algorithm(), request.token());
+        return ResponseEntity.ok(new VerifyResponseDto(request.algorithm(), valid));
     }
 
     @PostMapping("/token/default")

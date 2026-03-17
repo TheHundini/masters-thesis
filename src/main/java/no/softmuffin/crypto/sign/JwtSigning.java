@@ -9,4 +9,6 @@ public interface JwtSigning {
      * @return Signed JWT in string value atm...could be converted to Jwt token
      */
     String signJwt(String payload);
+
+    boolean verifyJwt(String jwt);
 }

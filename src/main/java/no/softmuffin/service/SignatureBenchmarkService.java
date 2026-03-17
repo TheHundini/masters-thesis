@@ -27,15 +27,26 @@ public class SignatureBenchmarkService {
     public BenchmarkResultDto runSignatureBenchmark(String algorithm, int iterations, String payload) {
         String lastToken = null;
 
-        long start = System.nanoTime();
+        long signStart = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
-            lastToken = signatureService.generateSignedJwt(algorithm, "benchmark-payload");
+            lastToken = signatureService.generateSignedJwt(algorithm, payload);
         }
-        long end = System.nanoTime();
+        long signEnd = System.nanoTime();
 
-        long totalNs = end - start;
-        double totalMs = totalNs / 1_000_000.0;
-        double avgUs = (totalNs / (double) iterations) / 1_000.0;
+        long totalSignNs = signEnd - signStart;
+        double totalSignMs = totalSignNs / 1_000_000.0;
+        double avgUsPerSign = (totalSignNs / (double) iterations) / 1_000.0;
+
+        boolean verified = false;
+        long verifyStart = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            verified = signatureService.verifySignedJwt(algorithm, lastToken);
+        }
+        long verifyEnd = System.nanoTime();
+
+        long totalVerifyNs = verifyEnd - verifyStart;
+        double totalVerifyMs = totalVerifyNs / 1_000_000.0;
+        double avgUsPerVerify = (totalVerifyNs / (double) iterations) / 1_000.0;
 
         // KeyPair metrics
         KeyPair keyPair = keyManager.getOrCreateKeyPair(algorithm);
@@ -45,18 +56,30 @@ public class SignatureBenchmarkService {
         int signatureBytes = JWTMetricsUtil.getSignatureByteLength(lastToken);
 
         LOGGER.info(
-                "Benchmark {}: iter={} totalMs={} avgUs={} pubBits={} privBits={} sigBytes={}",
-                algorithm, iterations, totalMs, avgUs, publicKeyBits, privateKeyBits, signatureBytes
+                "Benchmark {}: iter={} signMs={} signUs={} verifyMs={} verifyUs={} pubBits={} privBits={} sigBytes={} verified={}",
+                algorithm,
+                iterations,
+                totalSignMs,
+                avgUsPerSign,
+                totalVerifyMs,
+                avgUsPerVerify,
+                publicKeyBits,
+                privateKeyBits,
+                signatureBytes,
+                verified
         );
 
         return new BenchmarkResultDto(
                 algorithm,
                 iterations,
-                totalMs,
-                avgUs,
+                totalSignMs,
+                avgUsPerSign,
+                totalVerifyMs,
+                avgUsPerVerify,
                 publicKeyBits,
                 privateKeyBits,
                 signatureBytes,
+                verified,
                 lastToken
         );
     }

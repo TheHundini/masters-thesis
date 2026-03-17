@@ -1,8 +1,10 @@
 package no.softmuffin.crypto.sign.classical;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import no.softmuffin.config.JWTDefault;
 import no.softmuffin.crypto.keys.KeyManager;
 import no.softmuffin.crypto.sign.JwtSigning;
@@ -51,5 +53,17 @@ public class RSAJwtSigner implements JwtSigning {
         }
 
         return builder.sign(alg);
+    }
+
+    @Override
+    public boolean verifyJwt(final String jwt) {
+        try {
+            final RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+            final JWTVerifier verifier = JWT.require(Algorithm.RSA256(publicKey, null)).build();
+            verifier.verify(jwt);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
+        }
     }
 }

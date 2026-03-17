@@ -1,0 +1,38 @@
+Index: src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package no.softmuffin.crypto.keys;\r\n\r\nimport org.bouncycastle.jcajce.spec.MLDSAParameterSpec;\r\nimport org.bouncycastle.jce.provider.BouncyCastleProvider;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.stereotype.Component;\r\n\r\nimport java.security.*;\r\nimport java.util.Map;\r\nimport java.util.concurrent.ConcurrentHashMap;\r\n\r\n@Component\r\npublic class RunTimeKeyManager implements KeyManager {\r\n\r\n    private static final Logger LOGGER = LoggerFactory.getLogger(RunTimeKeyManager.class);\r\n\r\n    private final Map<String, KeyPair> keyPairs = new ConcurrentHashMap<>();\r\n\r\n    @Override\r\n    public KeyPair getOrCreateKeyPair(final String algorithmName) {\r\n        return keyPairs.computeIfAbsent(algorithmName.toUpperCase(), this::generateKeyPairForAlgorithm);\r\n    }\r\n\r\n    private KeyPair generateKeyPairForAlgorithm(final String alg) {\r\n        try{\r\n            return switch (alg) {\r\n                case \"RSA\" -> generateRsaKeyPair(2048);\r\n                case \"EC\" -> generateEcKeyPair(\"secp256r1\");\r\n                case \"ML-DSA\" -> generateMldsaKeyPair();\r\n                default -> throw new IllegalArgumentException(\"Unsupported algorithm: \" + alg);\r\n            };\r\n        } catch (GeneralSecurityException e) {\r\n            LOGGER.error(\"Failed to generate keypair for algorithm {}\", alg, e);\r\n            throw new IllegalStateException(\"Failed to generate keypair for algorithm \" + alg, e);\r\n        }\r\n    }\r\n\r\n    private KeyPair generateRsaKeyPair(final int keySize) throws NoSuchAlgorithmException {\r\n        KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"RSA\");\r\n        kpg.initialize(keySize);\r\n        return kpg.generateKeyPair();\r\n    }\r\n\r\n    private KeyPair generateEcKeyPair(final String curveName) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {\r\n        KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"EC\");\r\n        kpg.initialize(new java.security.spec.ECGenParameterSpec(curveName));\r\n        return kpg.generateKeyPair();\r\n    }\r\n\r\n    private KeyPair generateMldsaKeyPair() throws GeneralSecurityException {\r\n        if (Security.getProvider(\"BC\") == null) {\r\n            Security.addProvider(new BouncyCastleProvider());\r\n        }\r\n        KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"ML-DSA\", \"BC\");\r\n        kpg.initialize(MLDSAParameterSpec.ml_dsa_65, new SecureRandom());\r\n        return kpg.generateKeyPair();\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java b/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java
+--- a/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java	(revision f15b3c737c6a5325aa6b72d2cb253117613f364d)
++++ b/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java	(date 1769527138679)
+@@ -1,6 +1,7 @@
+ package no.softmuffin.crypto.keys;
+ 
+ import org.bouncycastle.jcajce.spec.MLDSAParameterSpec;
++import org.bouncycastle.jcajce.spec.SLHDSAParameterSpec;
+ import org.bouncycastle.jce.provider.BouncyCastleProvider;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -28,6 +29,7 @@
+                 case "RSA" -> generateRsaKeyPair(2048);
+                 case "EC" -> generateEcKeyPair("secp256r1");
+                 case "ML-DSA" -> generateMldsaKeyPair();
++                case "SLH-DSA" -> generateSlhdsaKeyPair();
+                 default -> throw new IllegalArgumentException("Unsupported algorithm: " + alg);
+             };
+         } catch (GeneralSecurityException e) {
+@@ -56,4 +58,13 @@
+         kpg.initialize(MLDSAParameterSpec.ml_dsa_65, new SecureRandom());
+         return kpg.generateKeyPair();
+     }
++
++    private KeyPair generateSlhdsaKeyPair() throws GeneralSecurityException {
++        if (Security.getProvider("BC") == null) {
++            Security.addProvider(new BouncyCastleProvider());
++        }
++        KeyPairGenerator kpg = KeyPairGenerator.getInstance("SLH-DSA", "BC");
++        kpg.initialize(SLHDSAParameterSpec.slh_dsa_shake_128s, new SecureRandom());
++        return kpg.generateKeyPair();
++    }
+ }

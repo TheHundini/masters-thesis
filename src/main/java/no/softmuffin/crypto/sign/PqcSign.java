@@ -4,4 +4,5 @@ package no.softmuffin.crypto.sign;
 public interface PqcSign {
     String algorithmName();
     byte[] sign(byte[] data);
+    boolean verify(byte[] data, byte[] signature);
 }

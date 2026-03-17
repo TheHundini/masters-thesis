@@ -1,6 +1,7 @@
 package no.softmuffin.crypto.keys;
 
 import org.bouncycastle.jcajce.spec.MLDSAParameterSpec;
+import org.bouncycastle.jcajce.spec.SLHDSAParameterSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class RunTimeKeyManager implements KeyManager {
                 case "RSA" -> generateRsaKeyPair(2048);
                 case "EC" -> generateEcKeyPair("secp256r1");
                 case "ML-DSA" -> generateMldsaKeyPair();
+                case "SLH-DSA" -> generateSlhdsaKeyPair();
                 default -> throw new IllegalArgumentException("Unsupported algorithm: " + alg);
             };
         } catch (GeneralSecurityException e) {
@@ -54,6 +56,15 @@ public class RunTimeKeyManager implements KeyManager {
         }
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("ML-DSA", "BC");
         kpg.initialize(MLDSAParameterSpec.ml_dsa_65, new SecureRandom());
+        return kpg.generateKeyPair();
+    }
+
+    private KeyPair generateSlhdsaKeyPair() throws GeneralSecurityException {
+        if (Security.getProvider("BC") == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("SLH-DSA", "BC");
+        kpg.initialize(SLHDSAParameterSpec.slh_dsa_shake_128s, new SecureRandom());
         return kpg.generateKeyPair();
     }
 }

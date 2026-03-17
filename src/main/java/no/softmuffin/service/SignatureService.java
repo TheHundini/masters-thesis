@@ -24,17 +24,28 @@ public class SignatureService {
                         s -> s.algorithmId().toUpperCase(),
                         Function.identity()
                 ));
-        LOGGER.info("Registered JWT strategies: {}", jwtSigningStrategiesById.keySet());
+        //LOGGER.info("Registered JWT strategies: {}", jwtSigningStrategiesById.keySet());
     }
 
     public String generateSignedJwt(@NotBlank final String algorithmLabel, final String payload) {
-        final String key = algorithmLabel.trim().toUpperCase();
-        JwtSigning strategy = jwtSigningStrategiesById.get(key);
+        final JwtSigning strategy = getStrategy(algorithmLabel);
 
+        //LOGGER.debug("Using strategy {} for algorithm {}", strategy.getClass().getSimpleName(), algorithmLabel);
+        return strategy.signJwt(payload);
+    }
+
+    public boolean verifySignedJwt(@NotBlank final String algorithmLabel, final String jwt) {
+        final JwtSigning strategy = getStrategy(algorithmLabel);
+        //LOGGER.debug("Using strategy {} for algorithm {}", strategy.getClass().getSimpleName(), algorithmLabel);
+        return strategy.verifyJwt(jwt);
+    }
+
+    private JwtSigning getStrategy(final String algorithmLabel) {
+        final String key = algorithmLabel.trim().toUpperCase();
+        final JwtSigning strategy = jwtSigningStrategiesById.get(key);
         if (strategy == null) {
             throw new IllegalArgumentException("Unsupported algorithm: " + key);
         }
-        LOGGER.debug("Using strategy {} for algorithm {}", strategy.getClass().getSimpleName(), algorithmLabel);
-        return strategy.signJwt(payload);
+        return strategy;
     }
 }
