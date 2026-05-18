@@ -21,9 +21,8 @@ public class KeyMetricsUtil {
         return publicKey.getEncoded().length * 8;
     }
 
-    public static int privateKeyubits(KeyPair keyPair) {
+    public static int privateKeyBits(KeyPair keyPair) {
         PrivateKey privateKey = keyPair.getPrivate();
-        // This might be an approximation...
         return privateKey.getEncoded().length * 8;
     }
 }

@@ -1,7 +1,16 @@
 package no.softmuffin.crypto.sign;
 
-// TODO - Think how to do this better?
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 public interface PqcSign {
     String algorithmName();
-    byte[] sign(byte[] data);
+
+    byte[] sign(byte[] message);
+
+    boolean verify(byte[] data, byte[] signature);
+
+    byte[] sign(byte[] message, PrivateKey privateKey);
+
+    boolean verify(byte[] message, byte[] signature, PublicKey publicKey);
 }

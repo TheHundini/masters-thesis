@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b938a34a-8c83-4838-9b59-82cae3e823a6" name="Changes" comment="Add verification and benchmarking">
+      <change afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureFullLifecycleBenchmark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/SignatureServiceBenchmark.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/CryptoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/CryptoConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/KeyMetricsUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/KeyMetricsUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/KeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/KeyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/JwtSigning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/JwtSigning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/ManualJwtSigning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/ManualJwtSigning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/PqcSign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/PqcSign.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/classical/RSAJwtSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/classical/RSAJwtSigner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcMldsaSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcMldsaSigner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcSlhdsaSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcSlhdsaSigner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureBenchmarkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureBenchmarkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/TlsBenchmarkServser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/softmuffin/api/JwtServerControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/softmuffin/api/JwtServerControllerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="85" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;TheHundini&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/TheHundini/masters-thesis.git&quot;,
+    &quot;accountId&quot;: &quot;cbc77d97-d042-4b25-95fd-f36194dc0bd9&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;TheHundini&quot;,
+    &quot;repository&quot;: &quot;masters-thesis&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="339iDlp0gqLHgYy4U392Wp9u14f" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.JwtServerControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pocpqc [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pocpqc [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pocpqc [org.springframework.boot:spring-boot-maven-plugin:3.5.6:run].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.MastersPoCApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#2 on feature/verification-and-benchmark&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/HomeCode/PQC-Benchmark/thesis&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="no.softmuffin.api" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.MastersPoCApplication">
+    <configuration name="JwtServerControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="untitled" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.softmuffin.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.softmuffin.api" />
+      <option name="MAIN_CLASS_NAME" value="no.softmuffin.api.JwtServerControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MastersPoCApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="pocpqc" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="no.softmuffin.MastersPoCApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MastersPoCApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="pocpqc" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="MastersPoCApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.JwtServerControllerTest" />
+        <item itemvalue="JUnit.JwtServerControllerTest" />
+        <item itemvalue="JUnit.JwtServerControllerTest" />
+        <item itemvalue="JUnit.JwtServerControllerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b938a34a-8c83-4838-9b59-82cae3e823a6" name="Changes" comment="" />
+      <created>1758735574121</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758735574121</updated>
+      <workItem from="1773159656334" duration="2158000" />
+      <workItem from="1773243109116" duration="3357000" />
+      <workItem from="1773668428484" duration="13136000" />
+      <workItem from="1774256487816" duration="2104000" />
+      <workItem from="1775401496600" duration="7066000" />
+      <workItem from="1778326366677" duration="1231000" />
+      <workItem from="1778599111421" duration="4324000" />
+      <workItem from="1778809008871" duration="30598000" />
+    </task>
+    <task id="LOCAL−00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1758735965275</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1758735965275</updated>
+    </task>
+    <task id="LOCAL−00002" summary="Add first implementation of backend, supports bouncyCastle ML-DSA, and RSA signing of JWTs">
+      <option name="closed" value="true" />
+      <created>1764545649075</created>
+      <option name="number" value="LOCAL−00002" />
+      <option name="presentableId" value="LOCAL−00002" />
+      <updated>1764545649075</updated>
+    </task>
+    <task id="LOCAL−00003" summary="Add verification and benchmarking">
+      <option name="closed" value="true" />
+      <created>1773756777828</created>
+      <option name="number" value="LOCAL−00003" />
+      <option name="presentableId" value="LOCAL−00003" />
+      <updated>1773756777828</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <MESSAGE value="Add first implementation of backend, supports bouncyCastle ML-DSA, and RSA signing of JWTs" />
+    <MESSAGE value="Add verification and benchmarking" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add verification and benchmarking" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
