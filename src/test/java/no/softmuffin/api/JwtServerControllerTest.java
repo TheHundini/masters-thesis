@@ -5,6 +5,8 @@ import no.softmuffin.service.SignatureService;
 import no.softmuffin.service.SignatureBenchmarkService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,73 +21,21 @@ class JwtServerControllerTest {
     @Autowired
     private SignatureService signatureService;
 
-    @Test
-    @DisplayName("Benchmark RSA signing successfully")
-    void benchmarkRsa() {
-        BenchmarkResultDto result =
-                signatureBenchmarkService.runSignatureBenchmark("RSA", 10, "test-payload-rsa");
+    @ParameterizedTest(name = "{0} benchmark returns valid metrics")
+    @ValueSource(strings = {"RSA", "EC", "ML-DSA", "SLH-DSA"})
+    @DisplayName("Benchmark each signing algorithm successfully")
+    void benchmarkAlgorithms(final String algorithm) {
+        final BenchmarkResultDto result =
+                signatureBenchmarkService.runSignatureBenchmark(algorithm, 1, "test-payload");
 
-        assertThat(result.algorithm()).isEqualTo("RSA");
-        assertThat(result.iterations()).isEqualTo(10);
-        assertThat(result.totalSignMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerSign()).isGreaterThan(0.0);
-        assertThat(result.totalVerifyMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerVerify()).isGreaterThan(0.0);
-        assertThat(result.publicKeyBits()).isGreaterThan(0);
-        assertThat(result.privateKeyBits()).isGreaterThan(0);
-        assertThat(result.signatureBytes()).isGreaterThan(0);
-        assertThat(result.verified()).isTrue();
-        assertThat(result.sampleToken()).isNotBlank();
-    }
-
-    @Test
-    @DisplayName("Benchmark ML-DSA signing successfully")
-    void benchmarkMldsa() {
-        BenchmarkResultDto result = signatureBenchmarkService.runSignatureBenchmark(
-                "ML-DSA",
-                10,
-                "test-payload-ml-dsa"
-        );
-
-        assertThat(result.algorithm()).isEqualTo("ML-DSA");
-        assertThat(result.iterations()).isEqualTo(10);
-        assertThat(result.totalSignMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerSign()).isGreaterThan(0.0);
-        assertThat(result.totalVerifyMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerVerify()).isGreaterThan(0.0);
-        assertThat(result.publicKeyBits()).isGreaterThan(0);
-        assertThat(result.privateKeyBits()).isGreaterThan(0);
-        assertThat(result.signatureBytes()).isGreaterThan(0);
-        assertThat(result.verified()).isTrue();
-        assertThat(result.sampleToken()).isNotBlank();
-    }
-
-    @Test
-    @DisplayName("Benchmark SLH-DSA signing and verification successfully")
-    void benchmarkSlhdsa() {
-        BenchmarkResultDto result = signatureBenchmarkService.runSignatureBenchmark(
-                "SLH-DSA",
-                10,
-                "test-payload-slh-dsa"
-        );
-
-        assertThat(result.algorithm()).isEqualTo("SLH-DSA");
-        assertThat(result.iterations()).isEqualTo(10);
-        assertThat(result.totalSignMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerSign()).isGreaterThan(0.0);
-        assertThat(result.totalVerifyMs()).isGreaterThan(0.0);
-        assertThat(result.avgUsPerVerify()).isGreaterThan(0.0);
-        assertThat(result.publicKeyBits()).isGreaterThan(0);
-        assertThat(result.privateKeyBits()).isGreaterThan(0);
-        assertThat(result.signatureBytes()).isGreaterThan(0);
-        assertThat(result.verified()).isTrue();
-        assertThat(result.sampleToken()).isNotBlank();
+        assertBenchmarkResult(result, algorithm);
     }
 
     @Test
     @DisplayName("Verify signed tokens with matching algorithm")
     void verifyMatchingAlgorithms() {
         assertVerifiedRoundTrip("RSA", "rsa-roundtrip");
+        assertVerifiedRoundTrip("EC", "ec-roundtrip");
         assertVerifiedRoundTrip("ML-DSA", "mldsa-roundtrip");
         assertVerifiedRoundTrip("SLH-DSA", "slhdsa-roundtrip");
     }
@@ -105,5 +55,19 @@ class JwtServerControllerTest {
 
         assertThat(token).isNotBlank();
         assertThat(signatureService.verifySignedJwt(algorithm, token)).isTrue();
+    }
+
+    private void assertBenchmarkResult(final BenchmarkResultDto result, final String algorithm) {
+        assertThat(result.algorithm()).isEqualTo(algorithm);
+        assertThat(result.iterations()).isEqualTo(1);
+        assertThat(result.totalSignMs()).isGreaterThan(0.0);
+        assertThat(result.avgUsPerSign()).isGreaterThan(0.0);
+        assertThat(result.totalVerifyMs()).isGreaterThan(0.0);
+        assertThat(result.avgUsPerVerify()).isGreaterThan(0.0);
+        assertThat(result.publicKeyBits()).isGreaterThan(0);
+        assertThat(result.privateKeyBits()).isGreaterThan(0);
+        assertThat(result.signatureBytes()).isGreaterThan(0);
+        assertThat(result.verified()).isTrue();
+        assertThat(result.sampleToken()).isNotBlank();
     }
 }

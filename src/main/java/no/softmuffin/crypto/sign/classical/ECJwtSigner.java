@@ -13,33 +13,33 @@ import org.springframework.stereotype.Component;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.time.Instant;
 import java.util.Map;
 
 @Component
-public class RSAJwtSigner implements JwtSigning {
+public class ECJwtSigner implements JwtSigning {
 
     private final KeyPair keyPair;
 
-    public RSAJwtSigner(KeyManager keyManager) {
-        this.keyPair = keyManager.getOrCreateKeyPair("RSA-L3");
+    public ECJwtSigner(final KeyManager keyManager) {
+        this.keyPair = keyManager.getOrCreateKeyPair("EC-L3");
     }
 
     @Override
     public String algorithmId() {
-        return "RSA";
+        return "EC";
     }
 
     @Override
-    public String signJwt(String payload) {
+    public String signJwt(final String payload) {
         return signJwt(payload, keyPair.getPrivate());
     }
 
     @Override
     public String signJwt(final String payload, final PrivateKey privateKey) {
-        final Algorithm algorithm = algorithmForPrivateKey((RSAPrivateKey) privateKey);
+        final Algorithm algorithm = algorithmForPrivateKey((ECPrivateKey) privateKey);
         return createJwt(payload, algorithm);
     }
 
@@ -51,7 +51,7 @@ public class RSAJwtSigner implements JwtSigning {
     @Override
     public boolean verifyJwt(final String jwt, final PublicKey publicKey) {
         try {
-            final JWTVerifier verifier = JWT.require(algorithmForPublicKey((RSAPublicKey) publicKey)).build();
+            final JWTVerifier verifier = JWT.require(algorithmForPublicKey((ECPublicKey) publicKey)).build();
             verifier.verify(jwt);
             return true;
         } catch (JWTVerificationException e) {
@@ -77,25 +77,25 @@ public class RSAJwtSigner implements JwtSigning {
         return builder.sign(algorithm);
     }
 
-    private Algorithm algorithmForPrivateKey(final RSAPrivateKey privateKey) {
-        final int keyBits = privateKey.getModulus().bitLength();
-        if (keyBits <= 3072) {
-            return Algorithm.RSA256(null, privateKey);
+    private Algorithm algorithmForPrivateKey(final ECPrivateKey privateKey) {
+        final int fieldSize = privateKey.getParams().getCurve().getField().getFieldSize();
+        if (fieldSize <= 256) {
+            return Algorithm.ECDSA256(null, privateKey);
         }
-        if (keyBits <= 7680) {
-            return Algorithm.RSA384(null, privateKey);
+        if (fieldSize <= 384) {
+            return Algorithm.ECDSA384(null, privateKey);
         }
-        return Algorithm.RSA512(null, privateKey);
+        return Algorithm.ECDSA512(null, privateKey);
     }
 
-    private Algorithm algorithmForPublicKey(final RSAPublicKey publicKey) {
-        final int keyBits = publicKey.getModulus().bitLength();
-        if (keyBits <= 3072) {
-            return Algorithm.RSA256(publicKey, null);
+    private Algorithm algorithmForPublicKey(final ECPublicKey publicKey) {
+        final int fieldSize = publicKey.getParams().getCurve().getField().getFieldSize();
+        if (fieldSize <= 256) {
+            return Algorithm.ECDSA256(publicKey, null);
         }
-        if (keyBits <= 7680) {
-            return Algorithm.RSA384(publicKey, null);
+        if (fieldSize <= 384) {
+            return Algorithm.ECDSA384(publicKey, null);
         }
-        return Algorithm.RSA512(publicKey, null);
+        return Algorithm.ECDSA512(publicKey, null);
     }
 }

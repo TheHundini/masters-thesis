@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 
@@ -17,12 +19,11 @@ public class BcSlhdsaSigner implements PqcSign {
     private static final Logger LOGGER = LoggerFactory.getLogger(BcSlhdsaSigner.class);
     private static final String EXTERNAL_NAME = "SLH-DSA";
 
-    // This is not very statefull atm :)
     private final KeyPair keyPair;
 
     public BcSlhdsaSigner(KeyManager keyManager) {
-        this.keyPair = keyManager.getOrCreateKeyPair(EXTERNAL_NAME);
-        LOGGER.info("Using key pair for {}", EXTERNAL_NAME);
+        this.keyPair = keyManager.getOrCreateKeyPair("SLH-DSA-L3");
+        LOGGER.debug("Using key pair for {}", EXTERNAL_NAME);
     }
 
     @Override
@@ -32,9 +33,14 @@ public class BcSlhdsaSigner implements PqcSign {
 
     @Override
     public byte[] sign(byte[] data) {
+        return sign(data, keyPair.getPrivate());
+    }
+
+    @Override
+    public byte[] sign(final byte[] data, final PrivateKey privateKey) {
         try {
             final Signature signature = Signature.getInstance("SLH-DSA", "BC");
-            signature.initSign(keyPair.getPrivate(), new SecureRandom());
+            signature.initSign(privateKey, new SecureRandom());
             signature.update(data);
             byte[] signed = signature.sign();
             LOGGER.debug("Generated {} signature, size={} bytes", EXTERNAL_NAME, signed.length);
@@ -44,10 +50,16 @@ public class BcSlhdsaSigner implements PqcSign {
         }
     }
 
+    @Override
     public boolean verify(byte[] data, byte[] signed) {
+        return verify(data, signed, keyPair.getPublic());
+    }
+
+    @Override
+    public boolean verify(final byte[] data, final byte[] signed, final PublicKey publicKey) {
         try {
             final Signature signature = Signature.getInstance("SLH-DSA", "BC");
-            signature.initVerify(keyPair.getPublic());
+            signature.initVerify(publicKey);
             signature.update(data);
             return signature.verify(signed);
         } catch (GeneralSecurityException e) {

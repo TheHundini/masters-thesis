@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 
@@ -20,8 +22,8 @@ public class BcMldsaSigner implements PqcSign {
     private final KeyPair keyPair;
 
     public BcMldsaSigner(KeyManager keyManager) {
-        this.keyPair = keyManager.getOrCreateKeyPair(EXTERNAL_NAME);
-        LOGGER.info("Using key pair for {}", EXTERNAL_NAME);
+        this.keyPair = keyManager.getOrCreateKeyPair("ML-DSA-L3");
+        LOGGER.debug("Using key pair for {}", EXTERNAL_NAME);
     }
 
     @Override
@@ -31,9 +33,14 @@ public class BcMldsaSigner implements PqcSign {
 
     @Override
     public byte[] sign(byte[] message) {
+        return sign(message, keyPair.getPrivate());
+    }
+
+    @Override
+    public byte[] sign(final byte[] message, final PrivateKey privateKey) {
         try {
             final Signature sig = Signature.getInstance("ML-DSA", "BC");
-            sig.initSign(keyPair.getPrivate(), new SecureRandom());
+            sig.initSign(privateKey, new SecureRandom());
             sig.update(message);
             byte[] signature = sig.sign();
             LOGGER.debug("Generated {} signature, size={} bytes", EXTERNAL_NAME, signature.length);
@@ -43,10 +50,16 @@ public class BcMldsaSigner implements PqcSign {
         }
     }
 
+    @Override
     public boolean verify(byte[] message, byte[] signature) {
+        return verify(message, signature, keyPair.getPublic());
+    }
+
+    @Override
+    public boolean verify(final byte[] message, final byte[] signature, final PublicKey publicKey) {
         try {
-            Signature sig = Signature.getInstance("ML-DSA", "BC");
-            sig.initVerify(keyPair.getPublic());
+            final Signature sig = Signature.getInstance("ML-DSA", "BC");
+            sig.initVerify(publicKey);
             sig.update(message);
             return sig.verify(signature);
         } catch (GeneralSecurityException e) {

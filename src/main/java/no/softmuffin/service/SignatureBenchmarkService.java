@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.KeyPair;
+import java.util.Objects;
 
 
 @Service
@@ -24,12 +25,17 @@ public class SignatureBenchmarkService {
         this.keyManager = keyManager;
     }
 
-    public BenchmarkResultDto runSignatureBenchmark(String algorithm, int iterations, String payload) {
+    public BenchmarkResultDto runSignatureBenchmark(final String algorithm, final int iterations, final String payload) {
+        if (iterations < 1) {
+            throw new IllegalArgumentException("Iterations must be at least 1");
+        }
+
+        final String benchmarkPayload = Objects.requireNonNullElse(payload, "");
         String lastToken = null;
 
         long signStart = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
-            lastToken = signatureService.generateSignedJwt(algorithm, payload);
+            lastToken = signatureService.generateSignedJwt(algorithm, benchmarkPayload);
         }
         long signEnd = System.nanoTime();
 
@@ -51,11 +57,11 @@ public class SignatureBenchmarkService {
         // KeyPair metrics
         KeyPair keyPair = keyManager.getOrCreateKeyPair(algorithm);
         int publicKeyBits = KeyMetricsUtil.publicKeyBits(keyPair);
-        int privateKeyBits = KeyMetricsUtil.privateKeyubits(keyPair);
+        int privateKeyBits = KeyMetricsUtil.privateKeyBits(keyPair);
 
         int signatureBytes = JWTMetricsUtil.getSignatureByteLength(lastToken);
 
-        LOGGER.info(
+        LOGGER.debug(
                 "Benchmark {}: iter={} signMs={} signUs={} verifyMs={} verifyUs={} pubBits={} privBits={} sigBytes={} verified={}",
                 algorithm,
                 iterations,

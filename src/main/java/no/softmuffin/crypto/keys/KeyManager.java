@@ -12,4 +12,12 @@ public interface KeyManager {
      * @return KeyPair for the given algorithm
      */
     KeyPair getOrCreateKeyPair(String algorithmCode);
+
+    /**
+     * Generate a fresh key pair without reusing any cached benchmark state.
+     * This is intended for measuring key generation cost in isolation.
+     * @param algorithmCode algorithm identifier such as RSA, EC, ML-DSA, or SLH-DSA
+     * @return a newly generated KeyPair
+     */
+    KeyPair generateKeyPair(String algorithmCode);
 }

@@ -8,14 +8,15 @@ import org.springframework.context.annotation.Configuration;
 
 import java.security.Security;
 
-// TODO: Dont like this implementation...but it is what it is for now.
 @Configuration
 public class CryptoConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(CryptoConfig.class);
 
     @PostConstruct
-    public void registerBc() {
-        Security.addProvider(new BouncyCastleProvider());
-        LOGGER.info("BouncyCastle PQC provider registered as 'BC'");
+    public void registerBouncyCastleProvider() {
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+            LOGGER.info("Bouncy Castle provider registered as '{}'", BouncyCastleProvider.PROVIDER_NAME);
+        }
     }
 }

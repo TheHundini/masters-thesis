@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.softmuffin.config.JWTDefault;
 
 import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Base64.Decoder;
 import java.util.Base64;
 import java.util.Map;
@@ -27,15 +29,19 @@ public class ManualJwtSigning implements JwtSigning {
 
     @Override
     public String signJwt(final String payload) {
+        return signJwt(payload, signatureAlgorithm::sign);
+    }
+
+    @Override
+    public String signJwt(final String payload, final PrivateKey privateKey) {
+        return signJwt(payload, message -> signatureAlgorithm.sign(message, privateKey));
+    }
+
+    private String signJwt(final String payload, final MessageSigner signer) {
         try {
-            String headerB64 = encode(createHeaderClaims());
-            String payloadB64 = encode(JWTDefault.defaultClaims(payload));
-            String signatureInput = createSignatureInput(headerB64, payloadB64);
-
-            byte[] signature = signatureAlgorithm.sign(signatureInput.getBytes(StandardCharsets.UTF_8));
-            String signatureB64 = B64_ENCODER.encodeToString(signature);
-
-            return "%s.%s.%s".formatted(headerB64, payloadB64, signatureB64);
+            final String signatureInput = createSigningInput(payload);
+            final byte[] signature = signer.sign(signatureInput.getBytes(StandardCharsets.UTF_8));
+            return createJwt(signatureInput, signature);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to generate manual JWT", e);
         }
@@ -43,6 +49,15 @@ public class ManualJwtSigning implements JwtSigning {
 
     @Override
     public boolean verifyJwt(final String jwt) {
+        return verifyJwt(jwt, signatureAlgorithm::verify);
+    }
+
+    @Override
+    public boolean verifyJwt(final String jwt, final PublicKey publicKey) {
+        return verifyJwt(jwt, (message, signature) -> signatureAlgorithm.verify(message, signature, publicKey));
+    }
+
+    private boolean verifyJwt(final String jwt, final MessageVerifier verifier) {
         try {
             final String[] parts = jwt.split("\\.");
             if (parts.length != 3) {
@@ -58,7 +73,7 @@ public class ManualJwtSigning implements JwtSigning {
             final String signatureInput = createSignatureInput(parts[0], parts[1]);
             final byte[] signature = B64_DECODER.decode(parts[2]);
 
-            return signatureAlgorithm.verify(signatureInput.getBytes(StandardCharsets.UTF_8), signature);
+            return verifier.verify(signatureInput.getBytes(StandardCharsets.UTF_8), signature);
         } catch (Exception e) {
             return false;
         }
@@ -68,8 +83,18 @@ public class ManualJwtSigning implements JwtSigning {
         return B64_ENCODER.encodeToString(MAPPER.writeValueAsBytes(objectMap));
     }
 
+    private String createSigningInput(final String payload) throws JsonProcessingException {
+        final String headerB64 = encode(createHeaderClaims());
+        final String payloadB64 = encode(JWTDefault.defaultClaims(payload));
+        return createSignatureInput(headerB64, payloadB64);
+    }
+
     private String createSignatureInput(final String headerB64, final String payloadB64) {
         return "%s.%s".formatted(headerB64, payloadB64);
+    }
+
+    private String createJwt(final String signatureInput, final byte[] signature) {
+        return "%s.%s".formatted(signatureInput, B64_ENCODER.encodeToString(signature));
     }
 
     private Map<String, Object> createHeaderClaims() {
@@ -77,5 +102,15 @@ public class ManualJwtSigning implements JwtSigning {
                 "typ", "JWT",
                 "alg", signatureAlgorithm.algorithmName()
         );
+    }
+
+    @FunctionalInterface
+    private interface MessageSigner {
+        byte[] sign(byte[] message);
+    }
+
+    @FunctionalInterface
+    private interface MessageVerifier {
+        boolean verify(byte[] message, byte[] signature);
     }
 }
