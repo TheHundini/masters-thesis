@@ -39,8 +39,9 @@ public class TlsHandshakeBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         @Param({
-                "RSA-L3", "ECC-L3", "ML-KEM-L3", "X25519-ML-KEM-L3",
-                "ECC-L5", "ML-KEM-L5", "P384-ML-KEM-L5"
+                "P384-RSA-L1", "P384-ECDSA-L3",
+                "MLKEM768-RSA-L1", "X25519-MLKEM768-RSA-L1",
+                "P521-ECDSA-L5", "MLKEM1024-RSA-L1", "P384-MLKEM1024-RSA-L1"
         })
         public String handshakeProfile;
 

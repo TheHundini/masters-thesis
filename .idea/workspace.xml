@@ -4,29 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b938a34a-8c83-4838-9b59-82cae3e823a6" name="Changes" comment="Add verification and benchmarking">
-      <change afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureFullLifecycleBenchmark.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="b938a34a-8c83-4838-9b59-82cae3e823a6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/SignatureServiceBenchmark.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/CryptoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/CryptoConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/KeyMetricsUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/config/KeyMetricsUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/KeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/KeyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/keys/RunTimeKeyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/JwtSigning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/JwtSigning.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/ManualJwtSigning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/ManualJwtSigning.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/PqcSign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/PqcSign.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/summarize-benchmarks.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/summarize-benchmarks.ps1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureFullLifecycleBenchmark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureFullLifecycleBenchmark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureKeyGenerationBenchmark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureKeyGenerationBenchmark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureServiceBenchmark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/signature/SignatureServiceBenchmark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/tls/TlsHandshakeBenchmark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bench/java/no/softmuffin/bench/tls/TlsHandshakeBenchmark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/SignatureAlgorithmSpec.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/SignatureAlgorithmSpec.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/classical/RSAJwtSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/classical/RSAJwtSigner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcMldsaSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcMldsaSigner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcSlhdsaSigner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/crypto/sign/pqc/BcSlhdsaSigner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureBenchmarkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureBenchmarkService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/service/SignatureService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/TlsBenchmarkServser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/no/softmuffin/api/JwtServerControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/softmuffin/api/JwtServerControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/context/TlsCertificateFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/context/TlsCertificateFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/profile/TlsBenchmarkProfiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/softmuffin/tls/profile/TlsBenchmarkProfiles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/softmuffin/tls/TlsLoopbackExchangeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/softmuffin/tls/TlsLoopbackExchangeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +24,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="85" />
+    <option name="cachedIndexableFilesCount" value="180" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -105,7 +95,7 @@
     &quot;Spring Boot.MastersPoCApplication.executor&quot;: &quot;Run&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#2 on feature/verification-and-benchmark&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/HomeCode/PQC-Benchmark/thesis&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -193,6 +183,8 @@
       <workItem from="1778326366677" duration="1231000" />
       <workItem from="1778599111421" duration="4324000" />
       <workItem from="1778809008871" duration="30598000" />
+      <workItem from="1779152809115" duration="933000" />
+      <workItem from="1779823426548" duration="621000" />
     </task>
     <task id="LOCAL−00001" summary="Initial commit">
       <option name="closed" value="true" />

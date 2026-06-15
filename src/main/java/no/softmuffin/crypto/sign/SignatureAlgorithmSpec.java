@@ -24,6 +24,7 @@ public record SignatureAlgorithmSpec(
 ) {
 
     private static final List<SignatureAlgorithmSpec> SPECS = List.of(
+            new SignatureAlgorithmSpec("RSA-L1", "RSA", 1, "RSA-3072", 3072, null, null),
             new SignatureAlgorithmSpec("RSA-L3", "RSA", 3, "RSA-7680", 7680, null, null),
             new SignatureAlgorithmSpec("EC-L3", "EC", 3, "secp384r1", null, "secp384r1", null),
             new SignatureAlgorithmSpec("ML-DSA-L3", "ML-DSA", 3, "ML-DSA-65", null, null, MLDSAParameterSpec.ml_dsa_65),
@@ -40,6 +41,7 @@ public record SignatureAlgorithmSpec(
 
     public static List<SignatureAlgorithmSpec> defaultBenchmarkSpecs() {
         return SPECS.stream()
+                .filter(spec -> !"RSA-L3".equals(spec.label()))
                 .filter(spec -> !"RSA-L5".equals(spec.label()))
                 .toList();
     }
@@ -73,7 +75,7 @@ public record SignatureAlgorithmSpec(
         final String normalized = algorithmLabel.trim().toUpperCase(Locale.ROOT);
 
         return switch (normalized) {
-            case "RSA" -> "RSA-L3";
+            case "RSA" -> "RSA-L1";
             case "EC", "ECC" -> "EC-L3";
             case "ML-DSA" -> "ML-DSA-L3";
             case "SLH-DSA" -> "SLH-DSA-L3";

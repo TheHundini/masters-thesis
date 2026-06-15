@@ -64,7 +64,7 @@ Default signature algorithms:
 
 | Label | Family | Security level | Parameter set |
 | --- | --- | ---: | --- |
-| `RSA-L3` | RSA | 3 | RSA-7680 |
+| `RSA-L1` | RSA | 1 | RSA-3072 |
 | `EC-L3` | ECDSA | 3 | secp384r1 |
 | `ML-DSA-L3` | ML-DSA | 3 | ML-DSA-65 |
 | `SLH-DSA-L3` | SLH-DSA | 3 | SLH-DSA-SHAKE-192s |
@@ -72,10 +72,11 @@ Default signature algorithms:
 | `ML-DSA-L5` | ML-DSA | 5 | ML-DSA-87 |
 | `SLH-DSA-L5` | SLH-DSA | 5 | SLH-DSA-SHAKE-256s |
 
-`RSA-L5` is defined as RSA-15360, but it is not part of the default sweep
-because key generation is extremely slow and can dominate a complete run.
-The older aliases `RSA`, `EC`, `ECC`, `ML-DSA`, and `SLH-DSA` still resolve to
-their level-3 labels.
+`RSA-L3` is defined as RSA-7680 and `RSA-L5` is defined as RSA-15360, but they
+are not part of the default sweep because fresh RSA key generation is slow and
+highly variable at those sizes. `RSA-L1` is included as a practical RSA-3072
+baseline. The older aliases `RSA`, `EC`, `ECC`, `ML-DSA`, and `SLH-DSA` still
+resolve to benchmark labels; `RSA` now resolves to `RSA-L1`.
 
 Signature payload sizes are `32`, `256`, `1024`, and `8192` bytes.
 
@@ -89,19 +90,20 @@ Default TLS profiles:
 
 | Label | Provider | Key agreement level | Authentication level | Notes |
 | --- | --- | ---: | ---: | --- |
-| `RSA-L3` | JDK JSSE | 3 | 3 | RSA-7680 authentication, secp384r1 ECDHE |
-| `ECC-L3` | JDK JSSE | 3 | 3 | ECDSA P-384 authentication, secp384r1 ECDHE |
-| `ML-KEM-L3` | BCJSSE | 3 | 3 | RSA-7680 authentication, MLKEM768 key agreement |
-| `X25519-ML-KEM-L3` | BCJSSE | 3 | 3 | RSA-7680 authentication, X25519MLKEM768 hybrid key agreement |
-| `ECC-L5` | JDK JSSE | 5 | 5 | ECDSA P-521 authentication, secp521r1 ECDHE |
-| `ML-KEM-L5` | BCJSSE | 5 | 3 | RSA-7680 authentication, MLKEM1024 key agreement |
-| `P384-ML-KEM-L5` | BCJSSE | 5 | 3 | RSA-7680 authentication, SecP384r1MLKEM1024 hybrid key agreement |
+| `P384-RSA-L1` | JDK JSSE | 3 | 1 | RSA-3072 authentication, secp384r1 ECDHE |
+| `P384-ECDSA-L3` | JDK JSSE | 3 | 3 | ECDSA P-384 authentication, secp384r1 ECDHE |
+| `MLKEM768-RSA-L1` | BCJSSE | 3 | 1 | RSA-3072 authentication, MLKEM768 key agreement |
+| `X25519-MLKEM768-RSA-L1` | BCJSSE | 3 | 1 | RSA-3072 authentication, X25519MLKEM768 hybrid key agreement |
+| `P521-ECDSA-L5` | JDK JSSE | 5 | 5 | ECDSA P-521 authentication, secp521r1 ECDHE |
+| `MLKEM1024-RSA-L1` | BCJSSE | 5 | 1 | RSA-3072 authentication, MLKEM1024 key agreement |
+| `P384-MLKEM1024-RSA-L1` | BCJSSE | 5 | 1 | RSA-3072 authentication, SecP384r1MLKEM1024 hybrid key agreement |
 
 The report includes key-agreement level, authentication level, and effective
 level. Effective level is the lower of key-agreement and authentication. On the
 current BCJSSE runtime, ML-KEM TLS handshakes work with RSA authentication but
-fail with EC authentication, so the ML-KEM-L5 TLS profiles benchmark level-5 key
-agreement with level-3 authentication and the report makes that visible.
+fail with EC authentication, so the ML-KEM TLS profiles benchmark the ML-KEM key
+agreement with RSA-3072 authentication and the report makes the lower effective
+level visible.
 
 `FrodoKEM` is listed as unsupported for TLS. Bouncy Castle 1.84 provides
 FrodoKEM primitives, but BCJSSE does not expose a FrodoKEM TLS named group that

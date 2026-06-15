@@ -23,13 +23,13 @@ class TlsLoopbackExchangeTest {
         assertThat(TlsBenchmarkProfiles.all())
                 .extracting(TlsBenchmarkProfile::name)
                 .containsExactly(
-                        "RSA-L3",
-                        "ECC-L3",
-                        "ML-KEM-L3",
-                        "X25519-ML-KEM-L3",
-                        "ECC-L5",
-                        "ML-KEM-L5",
-                        "P384-ML-KEM-L5",
+                        "P384-RSA-L1",
+                        "P384-ECDSA-L3",
+                        "MLKEM768-RSA-L1",
+                        "X25519-MLKEM768-RSA-L1",
+                        "P521-ECDSA-L5",
+                        "MLKEM1024-RSA-L1",
+                        "P384-MLKEM1024-RSA-L1",
                         "FrodoKEM"
                 );
     }
@@ -37,12 +37,12 @@ class TlsLoopbackExchangeTest {
     @Test
     @DisplayName("Run a full TLS handshake over loopback")
     void runsHandshakeOnly() throws Exception {
-        final PreparedTlsBenchmark prepared = TlsLoopbackExchange.prepare("RSA-L3");
+        final PreparedTlsBenchmark prepared = TlsLoopbackExchange.prepare("P384-RSA-L1");
 
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             final TlsExchangeResult result = TlsLoopbackExchange.handshakeOnly(prepared, executor);
 
-            assertThat(result.profile()).isEqualTo("RSA-L3");
+            assertThat(result.profile()).isEqualTo("P384-RSA-L1");
             assertThat(result.client().protocol()).isEqualTo("TLSv1.3");
             assertThat(result.client().cipherSuite()).startsWith("TLS_AES_");
             assertThat(result.applicationBytes()).isZero();
@@ -52,13 +52,13 @@ class TlsLoopbackExchangeTest {
     @Test
     @DisplayName("Run TLS key agreement and encrypted application data over loopback")
     void runsHandshakeAndMessage() throws Exception {
-        final PreparedTlsBenchmark prepared = TlsLoopbackExchange.prepare("X25519-ML-KEM-L3");
+        final PreparedTlsBenchmark prepared = TlsLoopbackExchange.prepare("X25519-MLKEM768-RSA-L1");
         final byte[] message = "hello over negotiated TLS keys".getBytes(StandardCharsets.UTF_8);
 
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             final TlsExchangeResult result = TlsLoopbackExchange.handshakeAndMessage(prepared, message, executor);
 
-            assertThat(result.profile()).isEqualTo("X25519-ML-KEM-L3");
+            assertThat(result.profile()).isEqualTo("X25519-MLKEM768-RSA-L1");
             assertThat(result.client().protocol()).isEqualTo("TLSv1.3");
             assertThat(result.client().cipherSuite()).startsWith("TLS_");
             assertThat(result.applicationBytes()).isEqualTo(message.length);

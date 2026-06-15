@@ -33,7 +33,7 @@ public class SignatureKeyGenerationBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-        @Param({"RSA-L3", "EC-L3", "ML-DSA-L3", "SLH-DSA-L3", "EC-L5", "ML-DSA-L5", "SLH-DSA-L5"})
+        @Param({"RSA-L1", "EC-L3", "ML-DSA-L3", "SLH-DSA-L3", "EC-L5", "ML-DSA-L5", "SLH-DSA-L5"})
         public String signatureAlgorithm;
 
         RunTimeKeyManager keyManager;

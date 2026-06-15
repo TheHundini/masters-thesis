@@ -66,7 +66,11 @@ public final class TlsCertificateFactory {
     private static String signatureAlgorithm(final String authenticationAlgorithm) {
         final SignatureAlgorithmSpec spec = SignatureAlgorithmSpec.byLabel(authenticationAlgorithm);
         return switch (spec.family()) {
-            case "RSA" -> spec.nistLevel() >= 5 ? "SHA512withRSA" : "SHA384withRSA";
+            case "RSA" -> switch (spec.nistLevel()) {
+                case 1 -> "SHA256withRSA";
+                case 3 -> "SHA384withRSA";
+                default -> "SHA512withRSA";
+            };
             case "EC" -> spec.nistLevel() >= 5 ? "SHA512withECDSA" : "SHA384withECDSA";
             default -> throw new IllegalArgumentException("Unsupported TLS authentication algorithm: " + authenticationAlgorithm);
         };

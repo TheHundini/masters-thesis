@@ -24,7 +24,7 @@ public class RSAJwtSigner implements JwtSigning {
     private final KeyPair keyPair;
 
     public RSAJwtSigner(KeyManager keyManager) {
-        this.keyPair = keyManager.getOrCreateKeyPair("RSA-L3");
+        this.keyPair = keyManager.getOrCreateKeyPair("RSA-L1");
     }
 
     @Override

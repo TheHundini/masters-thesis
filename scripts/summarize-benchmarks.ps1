@@ -167,7 +167,7 @@ function Normalize-SignatureLabel {
     }
 
     switch ($Algorithm.ToUpperInvariant()) {
-        "RSA" { return "RSA-L3" }
+        "RSA" { return "RSA-L1" }
         "EC" { return "EC-L3" }
         "ECC" { return "EC-L3" }
         "ML-DSA" { return "ML-DSA-L3" }
@@ -194,6 +194,10 @@ function Add-TlsMetadataToRows {
 
         if ($profile) {
             $metadata = $byProfile[$profile]
+            $row.tlsProfile = $profile
+            if ($row.benchmarkClass -eq "TlsHandshakeBenchmark") {
+                $row.algorithm = $profile
+            }
         }
 
         $row | Add-Member -Force -NotePropertyName tlsSupported -NotePropertyValue $(if ($metadata) { $metadata.supported } else { $null })
@@ -223,10 +227,17 @@ function Normalize-TlsProfileLabel {
     }
 
     switch ($Profile.ToUpperInvariant()) {
-        "RSA" { return "RSA-L3" }
-        "ECC" { return "ECC-L3" }
-        "ML-KEM" { return "ML-KEM-L3" }
-        "X25519-ML-KEM" { return "X25519-ML-KEM-L3" }
+        "RSA" { return "P384-RSA-L1" }
+        "RSA-L1" { return "P384-RSA-L1" }
+        "ECC" { return "P384-ECDSA-L3" }
+        "ECC-L3" { return "P384-ECDSA-L3" }
+        "ML-KEM" { return "MLKEM768-RSA-L1" }
+        "ML-KEM-L3" { return "MLKEM768-RSA-L1" }
+        "X25519-ML-KEM" { return "X25519-MLKEM768-RSA-L1" }
+        "X25519-ML-KEM-L3" { return "X25519-MLKEM768-RSA-L1" }
+        "ECC-L5" { return "P521-ECDSA-L5" }
+        "ML-KEM-L5" { return "MLKEM1024-RSA-L1" }
+        "P384-ML-KEM-L5" { return "P384-MLKEM1024-RSA-L1" }
         default { return $Profile.ToUpperInvariant() }
     }
 }
@@ -333,6 +344,7 @@ function Convert-Result {
 
     $score = [double]$Result.primaryMetric.score
     $scoreUnit = [string]$Result.primaryMetric.scoreUnit
+    $scoreError = Get-ObjectValue $Result.primaryMetric "scoreError"
     $scoreConfidence = $Result.primaryMetric.scoreConfidence
     $allocBytesPerOp = Get-MetricValue $Result "gc.alloc.rate.norm"
 
@@ -362,7 +374,8 @@ function Convert-Result {
         scoreUnit = $scoreUnit
         scoreMsPerOp = Convert-ToMilliseconds $score $scoreUnit
         scoreUsPerOp = Convert-ToMicroseconds $score $scoreUnit
-        scoreError = $Result.primaryMetric.scoreError
+        scoreError = $scoreError
+        relativeErrorPercent = if ($score -ne 0 -and $null -ne $scoreError) { ([double]$scoreError / $score) * 100.0 } else { $null }
         confidenceLow = $scoreConfidence[0]
         confidenceHigh = $scoreConfidence[1]
         p50 = Get-PrimaryPercentile $Result "50.0"
@@ -567,6 +580,38 @@ function Add-TopAllocationTable {
     Add-Line
 }
 
+function Add-HighUncertaintyTable {
+    param([object[]]$Rows)
+
+    $noisyRows = @($Rows |
+        Where-Object { $null -ne $_.relativeErrorPercent -and $_.relativeErrorPercent -ge 50.0 } |
+        Sort-Object relativeErrorPercent -Descending)
+
+    if ($noisyRows.Count -eq 0) {
+        return
+    }
+
+    Add-Line "## Highest Measurement Uncertainty"
+    Add-Line
+    Add-Line "These rows have JMH error greater than or equal to 50% of the measured score. They are useful warning signs, not stable headline numbers."
+    Add-Line
+    Add-Line "| Benchmark | Algorithm/Profile | Size | Score | Error | Error / score |"
+    Add-Line "| --- | --- | ---: | ---: | ---: | ---: |"
+
+    $noisyRows |
+        Select-Object -First 12 |
+        ForEach-Object {
+            $name = "$($_.benchmarkClass).$($_.method)"
+            $algo = if ($_.tlsProfile) { $_.tlsProfile } else { $_.algorithm }
+            $size = if ($_.payloadSizeBytes) { $_.payloadSizeBytes } elseif ($_.messageSizeBytes) { $_.messageSizeBytes } else { "" }
+            $score = "$(Format-Number $_.score 3) $($_.scoreUnit)"
+            $error = "$(Format-Number $_.scoreError 3) $($_.scoreUnit)"
+            Add-Line "| $name | $algo | $size | $score | $error | $(Format-Number $_.relativeErrorPercent 1)% |"
+        }
+
+    Add-Line
+}
+
 $resolvedInputPath = Resolve-InputPath $InputPath
 $results = Get-Content $resolvedInputPath | ConvertFrom-Json
 $rows = @($results | ForEach-Object { Convert-Result $_ })
@@ -616,6 +661,7 @@ Add-KeyGenerationTable $rows
 Add-FullLifecycleTable $rows
 Add-SteadyStateSignatureTable $rows
 Add-TlsTables $rows $tlsSizeRows
+Add-HighUncertaintyTable $rows
 Add-TopAllocationTable $rows
 
 Set-Content -Path $reportMarkdown -Value $reportLines -Encoding utf8
